@@ -1,7 +1,10 @@
+from audioop import reverse
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView
 from .models import Breed
 
 # Create your views here.
@@ -18,9 +21,34 @@ class BreedList(TemplateView):
         context = super().get_context_data(**kwargs)
         name = self.request.GET.get("name")
         if name != None:
-            context["breeds"] = Breed.objects.filter(name_icontains=name)
+            context["breeds"] = Breed.objects.filter(name__icontains=name)
             context["header"] = f"Searching for {name}"
         else:
             context["breeds"] = Breed.objects.all()  
             context["header"] = "Trending Breeds"      
         return context
+
+class BreedCreate(CreateView):
+    model = Breed
+    fields = ['name', 'img', 'bio', 'verified_breed']
+    template_name = "breed_create.html"
+    
+    def get_success_url(self):
+        return reverse('breed_detail', kwargs={'pk': self.object.pk})
+
+class BreedDetail(DetailView):
+    model = Breed
+    template_name = "breed_detail.html"
+
+class BreedUpdate(UpdateView):
+    model = Breed
+    fields = ['name', 'img', 'bio', 'verified_breed']
+    template_name = "breed_update.html"
+    
+    def get_success_url(self):
+        return reverse('breed_detail', kwargs={'pk': self.object.pk})
+
+class BreedDelete(DeleteView):
+    model = Breed
+    template_name = "breed_delete_confirmation.html"
+    success_url = "/breeds/"
