@@ -1,11 +1,12 @@
 from audioop import reverse
+from contextlib import redirect_stderr
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
-from .models import Breed
+from .models import Breed, Breeder
 
 # Create your views here.
 class Home(TemplateView):
@@ -52,3 +53,13 @@ class BreedDelete(DeleteView):
     model = Breed
     template_name = "breed_delete_confirmation.html"
     success_url = "/breeds/"
+
+class BreederCreate(View):
+
+    def post(self, request, pk):
+        name = request.POST.get("name")
+        breeds = request.POST.get("breeds")
+        breed = Breed.objects.get(pk=pk)
+        Breeder.objects.create(name=name, breeds=breeds, breed=breed)
+        return redirect('breed_detail', pk=pk)
+

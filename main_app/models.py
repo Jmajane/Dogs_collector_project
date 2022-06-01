@@ -15,3 +15,11 @@ class Breed(models.Model):
 
     class Meta:
         ordering = ['name']
+
+class Breeder(models.Model):
+    name = models.CharField(max_length=150)
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE, related_name="breeds")
+
+    def __str__(self):
+        return self.name
+    
