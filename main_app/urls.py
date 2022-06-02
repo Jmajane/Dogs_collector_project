@@ -10,5 +10,6 @@ urlpatterns = [
     path('breeds/<int:pk>/update', views.BreedUpdate.as_view(), name="breed_update"),
     path('breeds/<int:pk>/detele', views.BreedDelete.as_view(), name="breed_delete"),
     path('breeds/<int:pk>/breeders/new', views.BreederCreate.as_view(), name="breeder_create"),
+    path('accounts/signup/', views.Signup.as_view(), name="signup"), 
 ]
 
